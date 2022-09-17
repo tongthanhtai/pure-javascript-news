@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pure-javascript-news</title>
+</head>
+
+<body>
+    <div style="text-align: center; margin-top: 50px;">
+        <label>Search list: </label>
+        <input type="text" id="fname" style="width: 20%;" placeholder="Search list user"><br />
+        <button style="margin: 10px 10px;" onclick="add()">Add</button>
+        <button id="myCheck" onclick="search()">Search</button>
+    </div>
+    <div id="usersContainer">
+
+    </div>
+</body>
+<script>
+    const users = [];
+    window.onload = function showList() {
+        console.log('abc');
+        document.getElementById('usersContainer').innerHTML = ""
+        const baseUrl = 'https://jsonplaceholder.typicode.com/posts?_limit=20&_page=1'
+        fetch(baseUrl, {
+            method: 'GET',
+        })
+            .then(data => data.json())
+            .then(res => {
+                window.users = res;
+                console.log(window.users)
+                for (const index in window.users) {
+                    //console.log(index)
+                    document.getElementById('usersContainer').innerHTML += `
+                            <div>
+                                post: ${window.users[index].body}
+                            </div>
+                        `
+                }
+            })
+    }
+
+    function add() {
+            const userObj = {
+            userId: null,
+            id: window.users.length + 1,
+            title: '',
+            body: document.getElementById('fname').value
+        };
+        console.log(userObj)
+        window.users.push(userObj);
+
+        document.getElementById('usersContainer').innerHTML += `
+                            <div>
+                                post: ${userObj.body}
+                            </div>
+                        `
+    }
+
+    function search() {
+        
+        document.getElementById('usersContainer').innerHTML = '';
+        // Search body
+        const resultSearch = window.users.filter(element => { 
+            const textToSearch = document.getElementById('fname').value.toLowerCase();
+            return element.body.includes(textToSearch);
+        })
+        // Show list search
+        for (const index in resultSearch) {
+                    //console.log(index)
+                    document.getElementById('usersContainer').innerHTML += `
+                            <div>
+                                post: ${resultSearch[index].body}
+                            </div>
+                        `
+                }
+    }
+
+
+</script>
+
+</html>
